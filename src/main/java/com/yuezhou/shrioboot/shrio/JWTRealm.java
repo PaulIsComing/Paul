@@ -29,8 +29,8 @@ public class JWTRealm extends AuthorizingRealm {
         UserInfo userInfo = userService.getUser(userName);
 
         ShrioAuthenticationInfo authenticationInfo = new ShrioAuthenticationInfo();
-        authenticationInfo.addRole(userInfo.getRole());
-        authenticationInfo.addStringPermission(userInfo.getPremisson());
+        authenticationInfo.setRoles(userInfo.getRole());
+        authenticationInfo.addStringPermissions(userInfo.getPremisson());
         return authenticationInfo;
     }
 

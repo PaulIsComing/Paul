@@ -1,12 +1,14 @@
 package com.yuezhou.shrioboot.po;
 
+import java.util.Set;
+
 public class UserInfo {
 
     private String userName;
     private String password;
     private String salt;
-    private String role;
-    private String premisson;
+    private Set<String> role;
+    private Set<String> premisson;
     private long userId;
 
     public String getUserName() {
@@ -33,19 +35,19 @@ public class UserInfo {
         this.salt = salt;
     }
 
-    public String getRole() {
+    public Set<String> getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Set<String> role) {
         this.role = role;
     }
 
-    public String getPremisson() {
+    public Set<String> getPremisson() {
         return premisson;
     }
 
-    public void setPremisson(String premisson) {
+    public void setPremisson(Set<String> premisson) {
         this.premisson = premisson;
     }
 

@@ -1,15 +1,13 @@
 package com.yuezhou.shrioboot.service;
 
 import com.yuezhou.shrioboot.po.UserInfo;
+import com.yuezhou.shrioboot.po.enums.PageEnum;
 import com.yuezhou.shrioboot.utils.MD5Utils;
 import org.springframework.stereotype.Component;
 import sun.security.provider.MD5;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Component
 public class UserService {
@@ -17,21 +15,30 @@ public class UserService {
     private ArrayList<UserInfo> userList;
 
     public UserService() {
-        for (int i = 0; i < 5; i++) {
+        for (int i = 1; i <= 5; i++) {
             UserInfo userInfo = new UserInfo();
             userInfo.setUserId(i);
             userInfo.setUserName("user" + String.valueOf(i));
             userInfo.setSalt(String.valueOf(i));
             userInfo.setPassword(MD5Utils.md5("password" + String.valueOf(i) + String.valueOf(i)));
-            userInfo.setRole("user");
+            Set<String> roles = new HashSet<>();
+            roles.add("user");
             if (i % 2 == 0) {
-                userInfo.setRole("admin");
+                roles.add("admin");
             }
+            userInfo.setRole(roles);
 
-            userInfo.setPremisson("curd");
+            Set<String> permissions = new HashSet<>();
+            permissions.add(PageEnum.HOME.getPageAction());
+            permissions.add(PageEnum.MANAGEMENT.getPageAction(PageEnum.ActionEnum.READ));
+            if (i % 1 == 0)
+                permissions.add(PageEnum.MANAGEMENT.getPageAction(PageEnum.ActionEnum.CREAT));
+            if (i % 2 == 0)
+                permissions.add(PageEnum.MANAGEMENT.getPageAction(PageEnum.ActionEnum.UPDATE));
             if (i % 3 == 0)
-                userInfo.setPremisson("r");
+                permissions.add(PageEnum.MANAGEMENT.getPageAction(PageEnum.ActionEnum.DELETE));
 
+            userInfo.setPremisson(permissions);
             userList.add(userInfo);
         }
     }
