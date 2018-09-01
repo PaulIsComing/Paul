@@ -15,6 +15,7 @@ public class UserService {
     private ArrayList<UserInfo> userList;
 
     public UserService() {
+        userList = new ArrayList<>();
         for (int i = 1; i <= 5; i++) {
             UserInfo userInfo = new UserInfo();
             userInfo.setUserId(i);
