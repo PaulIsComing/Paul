@@ -1,6 +1,7 @@
 package com.yuezhou.shrioboot.utils;
 
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
@@ -101,6 +102,7 @@ public class RedisUtils {
             redisTemplate.opsForValue().set(key, value);
             return true;
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return false;
         }
 

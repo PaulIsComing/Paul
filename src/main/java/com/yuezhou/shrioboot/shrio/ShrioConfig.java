@@ -56,7 +56,7 @@ public class ShrioConfig {
         filterRuleMap.put("/static/**", "anon");
         // 所有请求通过我们自己的JWT Filter
         filterRuleMap.put("/**", "jwt");
-        // 访问401和404页面不通过我们的Filter
+        filterRuleMap.put("/restful/auth", "anon");
         filterRuleMap.put("/login", "anon");
         factoryBean.setFilterChainDefinitionMap(filterRuleMap);
         return factoryBean;

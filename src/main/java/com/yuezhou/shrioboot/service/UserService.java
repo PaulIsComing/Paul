@@ -2,49 +2,26 @@ package com.yuezhou.shrioboot.service;
 
 import com.yuezhou.shrioboot.po.UserInfo;
 import com.yuezhou.shrioboot.po.enums.PageEnum;
+import com.yuezhou.shrioboot.po.enums.RoleType;
 import com.yuezhou.shrioboot.utils.MD5Utils;
-import org.springframework.stereotype.Component;
-import sun.security.provider.MD5;
+import com.yuezhou.shrioboot.utils.RedisUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
-@Component
+@Service
 public class UserService {
 
-    private ArrayList<UserInfo> userList;
+
+    @Autowired
+    private RedisUtils redisUtils;
 
     public UserService() {
-        userList = new ArrayList<>();
-        for (int i = 1; i <= 5; i++) {
-            UserInfo userInfo = new UserInfo();
-            userInfo.setUserId(i);
-            userInfo.setUserName("user" + String.valueOf(i));
-            userInfo.setSalt(String.valueOf(i));
-            userInfo.setPassword(MD5Utils.md5("password" + String.valueOf(i) + String.valueOf(i)));
-            Set<String> roles = new HashSet<>();
-            roles.add("user");
-            if (i % 2 == 0) {
-                roles.add("admin");
-            }
-            userInfo.setRole(roles);
-
-            Set<String> permissions = new HashSet<>();
-            permissions.add(PageEnum.HOME.getPageAction());
-            permissions.add(PageEnum.MANAGEMENT.getPageAction(PageEnum.ActionEnum.READ));
-            if (i % 1 == 0)
-                permissions.add(PageEnum.MANAGEMENT.getPageAction(PageEnum.ActionEnum.CREAT));
-            if (i % 2 == 0)
-                permissions.add(PageEnum.MANAGEMENT.getPageAction(PageEnum.ActionEnum.UPDATE));
-            if (i % 3 == 0)
-                permissions.add(PageEnum.MANAGEMENT.getPageAction(PageEnum.ActionEnum.DELETE));
-
-            userInfo.setPremisson(permissions);
-            userList.add(userInfo);
-        }
     }
 
     public UserInfo getUser(long userId) {
+        ArrayList<UserInfo> userList = (ArrayList<UserInfo>) redisUtils.get("userlist");
 
         Optional<UserInfo> findAny = userList.stream().filter(f -> f.getUserId() == userId).findAny();
         if (findAny.isPresent())
@@ -56,12 +33,69 @@ public class UserService {
 
     public UserInfo getUser(String userName) {
 
-        Optional<UserInfo> findAny = userList.stream().filter(f -> f.getUserName() == userName).findAny();
-        if (findAny.isPresent())
-            return findAny.get();
+        ArrayList<UserInfo> userList = (ArrayList<UserInfo>) redisUtils.get("userlist");
+
+        if (null != userList) {
+            Optional<UserInfo> findAny = userList.stream().filter(f -> userName.equalsIgnoreCase(f.getUserName())).findAny();
+            if (findAny.isPresent())
+                return findAny.get();
+        }
 
         return null;
-
     }
 
+    public boolean updateLastLogin(Long userId) {
+        return true;
+    }
+
+    public boolean registerUser(String userName, String password) {
+        ArrayList<UserInfo> userList = (ArrayList<UserInfo>) redisUtils.get("userlist");
+
+        boolean add = true;
+        if (null != userList) {
+            Optional<UserInfo> optional = userList.stream().filter(f -> userName.equalsIgnoreCase(f.getUserName())).findAny();
+            add = !optional.isPresent();
+        }
+        if (add) {
+
+            Long userId;
+            if (null == userList) {
+                userList = new ArrayList<>();
+                userId = 1L;
+            } else
+                userId = (long) (userList.size() + 1);
+
+            UserInfo newUser = new UserInfo();
+            newUser.setUserId(userId);
+            newUser.setUserName(userName);
+            String salt = MD5Utils.md5(userName).toUpperCase().substring(5, 15);
+            newUser.setPassword(MD5Utils.md5(MD5Utils.md5(password) + salt));
+            newUser.setSalt(salt);
+
+            Set<String> roles = new HashSet<>();
+            roles.add(RoleType.USER);
+            if (userId % 2 == 0)
+                roles.add(RoleType.ADMIN);
+
+            newUser.setRole(roles);
+
+            Set<String> permissions = new HashSet<>();
+            permissions.add(PageEnum.HOME.getPageAction());
+            permissions.add(PageEnum.MANAGEMENT.getPageAction(PageEnum.ActionEnum.READ));
+
+            if (userId % 2 == 0) {
+                permissions.add(PageEnum.MANAGEMENT.getPageAction(PageEnum.ActionEnum.CREAT));
+                permissions.add(PageEnum.MANAGEMENT.getPageAction(PageEnum.ActionEnum.UPDATE));
+                permissions.add(PageEnum.MANAGEMENT.getPageAction(PageEnum.ActionEnum.DELETE));
+            }
+            newUser.setPremisson(permissions);
+
+
+            userList.add(newUser);
+            redisUtils.set("userlist", userList);
+            return true;
+        }
+
+        return false;
+    }
 }

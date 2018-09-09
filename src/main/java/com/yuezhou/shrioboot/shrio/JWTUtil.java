@@ -11,9 +11,6 @@ import java.util.Date;
 
 public class JWTUtil {
 
-    // 过期时间5分钟
-    private static final long EXPIRE_TIME = 24 * 60 * 60 * 1000;
-
     /**
      * 校验token是否正确
      *
@@ -21,11 +18,11 @@ public class JWTUtil {
      * @param secret 用户的密码
      * @return 是否正确
      */
-    public static boolean verify(String token, String username, String secret) {
+    public static boolean verify(String token, Long uid, String secret) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             JWTVerifier verifier = JWT.require(algorithm)
-                    .withClaim("username", username)
+                    .withClaim("userId", uid)
                     .build();
             DecodedJWT jwt = verifier.verify(token);
             return true;
@@ -39,30 +36,29 @@ public class JWTUtil {
      *
      * @return token中包含的用户名
      */
-    public static String getUsername(String token) {
+    public static Long getUserId(String token) {
         try {
             DecodedJWT jwt = JWT.decode(token);
-            return jwt.getClaim("username").asString();
+            return jwt.getClaim("userId").asLong();
         } catch (JWTDecodeException e) {
             return null;
         }
     }
 
     /**
-     * 生成签名,5min后过期
-     *
-     * @param username 用户名
-     * @param secret   用户的密码
-     * @return 加密的token
+     * 生成签名
+     * @param userId 用户ID
+     * @param secret 秘钥
+     * @param expiredTime 过期时间
+     * @return 签名Token
      */
-    public static String sign(String username, String secret) {
+    public static String sign(Long userId, String secret, Long expiredTime) {
         try {
-            Date date = new Date(System.currentTimeMillis() + EXPIRE_TIME);
+            Date expire = new Date(System.currentTimeMillis() + expiredTime);
             Algorithm algorithm = Algorithm.HMAC256(secret);
-            // 附带username信息
             return JWT.create()
-                    .withClaim("username", username)
-                    .withExpiresAt(date)
+                    .withClaim("userId", userId)
+                    .withExpiresAt(expire)
                     .sign(algorithm);
         } catch (UnsupportedEncodingException e) {
             return null;

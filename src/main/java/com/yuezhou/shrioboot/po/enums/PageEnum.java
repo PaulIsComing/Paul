@@ -15,7 +15,7 @@ public enum PageEnum {
     }
 
     public String getPageAction(ActionEnum action) {
-        return String.valueOf(page + action.getAction());
+        return getPageAction() + action.getAction();
     }
 
     public enum ActionEnum {
@@ -31,8 +31,8 @@ public enum PageEnum {
             this.action = action;
         }
 
-        public int getAction() {
-            return action;
+        public String getAction() {
+            return String.valueOf(action);
         }
     }
 }

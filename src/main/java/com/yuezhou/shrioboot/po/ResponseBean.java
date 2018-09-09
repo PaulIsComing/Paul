@@ -1,7 +1,6 @@
 package com.yuezhou.shrioboot.po;
 
 public class ResponseBean {
-
     // http 状态码
     private int code;
 
@@ -15,6 +14,11 @@ public class ResponseBean {
         this.code = code;
         this.msg = msg;
         this.data = data;
+    }
+
+    public static ResponseBean init() {
+        ResponseBean response = new ResponseBean(200, "", null);
+        return response;
     }
 
     public int getCode() {

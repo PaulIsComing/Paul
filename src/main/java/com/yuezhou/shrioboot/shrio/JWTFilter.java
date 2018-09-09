@@ -1,14 +1,18 @@
 package com.yuezhou.shrioboot.shrio;
 
+import com.yuezhou.shrioboot.po.CurrentUser;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 
 public class JWTFilter extends BasicHttpAuthenticationFilter {
@@ -21,7 +25,6 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
 
         return true;
     }
-
 
     /**
      *
@@ -75,6 +78,11 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
             return false;
         }
         return super.preHandle(request, response);
+    }
+
+    @Override
+    protected void postHandle(ServletRequest request, ServletResponse response) throws Exception {
+        CurrentUser.remove();
     }
 
 }
