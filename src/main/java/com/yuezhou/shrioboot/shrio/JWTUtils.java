@@ -9,7 +9,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
-public class JWTUtil {
+public class JWTUtils {
 
     /**
      * 校验token是否正确

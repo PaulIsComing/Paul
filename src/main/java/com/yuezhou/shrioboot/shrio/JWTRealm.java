@@ -24,7 +24,7 @@ public class JWTRealm extends AuthorizingRealm {
      * 授权
      */
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-        Long userId = JWTUtil.getUserId(principalCollection.toString());
+        Long userId = JWTUtils.getUserId(principalCollection.toString());
         assert null != userId && userId > 0L;
         UserInfo userInfo = userService.getUser(userId);
         assert null != userInfo;
@@ -47,7 +47,7 @@ public class JWTRealm extends AuthorizingRealm {
 
         String token = (String) authenticationToken.getCredentials();
 
-        Long userId = JWTUtil.getUserId(token);
+        Long userId = JWTUtils.getUserId(token);
 
         if (null == userId) {
             throw new AuthenticationException("Token失效");
@@ -58,7 +58,7 @@ public class JWTRealm extends AuthorizingRealm {
             throw new AuthenticationException("用户不存在");
         }
 
-        if (!JWTUtil.verify(token, userId, userInfo.getPassword())) {
+        if (!JWTUtils.verify(token, userId, userInfo.getPassword())) {
             throw new AuthenticationException("登录认证失败");
         }
 

@@ -4,6 +4,13 @@ public enum PageEnum {
     HOME(100),
     MANAGEMENT(200);
 
+
+    public static final String HOME_PAGE = "101";
+    public static final String MANAGEMENT_CREAT = "201";
+    public static final String MANAGEMENT_UPDATE = "202";
+    public static final String MANAGEMENT_QUERY = "203";
+    public static final String MANAGEMENT_DELETE = "204";
+
     private int page;
 
     PageEnum(int page) {

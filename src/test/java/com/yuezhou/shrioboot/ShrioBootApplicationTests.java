@@ -28,13 +28,13 @@ public class ShrioBootApplicationTests {
         System.out.println("100" + "1");
 
 
-        Scanner scan = new Scanner(System.in);
-        String read = scan.nextLine();
-        while (!"exit".equalsIgnoreCase(read)) {
-            String a = read;
-            read = scan.nextLine();
-            System.out.println(a + read);
-        }
+//        Scanner scan = new Scanner(System.in);
+//        String read = scan.nextLine();
+//        while (!"exit".equalsIgnoreCase(read)) {
+//            String a = read;
+//            read = scan.nextLine();
+//            System.out.println(a + read);
+//        }
 
 
 //

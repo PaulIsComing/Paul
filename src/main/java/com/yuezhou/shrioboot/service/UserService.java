@@ -2,7 +2,7 @@ package com.yuezhou.shrioboot.service;
 
 import com.yuezhou.shrioboot.po.UserInfo;
 import com.yuezhou.shrioboot.po.enums.PageEnum;
-import com.yuezhou.shrioboot.po.enums.RoleType;
+import com.yuezhou.shrioboot.po.enums.RoleEnum;
 import com.yuezhou.shrioboot.utils.MD5Utils;
 import com.yuezhou.shrioboot.utils.RedisUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,9 +73,9 @@ public class UserService {
             newUser.setSalt(salt);
 
             Set<String> roles = new HashSet<>();
-            roles.add(RoleType.USER);
+            roles.add(RoleEnum.USER_ROLE);
             if (userId % 2 == 0)
-                roles.add(RoleType.ADMIN);
+                roles.add(RoleEnum.ADMIN_ROLE);
 
             newUser.setRole(roles);
 

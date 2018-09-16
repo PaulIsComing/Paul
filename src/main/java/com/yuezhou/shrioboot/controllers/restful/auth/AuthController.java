@@ -6,9 +6,8 @@ import com.yuezhou.shrioboot.po.UserInfo;
 import com.yuezhou.shrioboot.po.enums.StatusCodeEnum;
 import com.yuezhou.shrioboot.service.AuthService;
 import com.yuezhou.shrioboot.service.UserService;
-import com.yuezhou.shrioboot.shrio.JWTUtil;
+import com.yuezhou.shrioboot.shrio.JWTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -38,7 +37,7 @@ public class AuthController {
                 expire = System.currentTimeMillis() + expire;
 
                 Map<String, Object> data = new HashMap<>();
-                data.put("token", JWTUtil.sign(userInfo.getUserId(), request.getPassword(), expire));
+                data.put("token", JWTUtils.sign(userInfo.getUserId(), request.getPassword(), expire));
                 data.put("expire", expire);
                 response.setData(data);
             } else {

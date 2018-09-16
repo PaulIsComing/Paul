@@ -29,4 +29,7 @@ spring:
     #cluster:
     #  nodes: 127.0.0.1':6379
     #  max-redirects: 3
-
+  mvc:
+    view:
+      prefix: /pages/
+      suffix: .html

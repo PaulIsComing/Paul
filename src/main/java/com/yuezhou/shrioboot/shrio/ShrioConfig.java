@@ -54,10 +54,10 @@ public class ShrioConfig {
          */
         Map<String, String> filterRuleMap = new HashMap<>();
         filterRuleMap.put("/static/**", "anon");
-        // 所有请求通过我们自己的JWT Filter
-        filterRuleMap.put("/**", "jwt");
         filterRuleMap.put("/restful/auth", "anon");
         filterRuleMap.put("/login", "anon");
+        // 所有请求通过我们自己的JWT Filter
+        filterRuleMap.put("/**", "jwt");
         factoryBean.setFilterChainDefinitionMap(filterRuleMap);
         return factoryBean;
     }

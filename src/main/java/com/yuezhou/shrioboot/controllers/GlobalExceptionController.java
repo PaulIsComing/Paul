@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @RestControllerAdvice
 public class GlobalExceptionController {
@@ -16,14 +18,21 @@ public class GlobalExceptionController {
     // 捕捉shiro的异常
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(ShiroException.class)
-    public ResponseBean handle401(ShiroException e) {
+    public ResponseBean handle401(ShiroException e, HttpServletResponse response) throws IOException {
+
+
+        response.setStatus(302);
+        response.sendRedirect("/login");
         return new ResponseBean(401, e.getMessage(), null);
     }
 
     // 捕捉UnauthorizedException
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(UnauthorizedException.class)
-    public ResponseBean handle401() {
+    public ResponseBean handle401(HttpServletResponse response) throws IOException {
+
+        response.setStatus(302);
+        response.sendRedirect("/login");
         return new ResponseBean(401, "Unauthorized", null);
     }
 
